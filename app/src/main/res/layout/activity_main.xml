@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bidali.giftcards.demo.MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/with_defaults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Defaults"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/with_region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="with Region"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/with_brand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="with Brand"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/with_api_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="with Payment via API"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/with_bitcoin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="with Bitcoin"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</RelativeLayout>
