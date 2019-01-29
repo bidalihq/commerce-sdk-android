@@ -34,7 +34,7 @@ public class BidaliGiftcardsSDK {
     }
 
     public void show(Activity activity, SDKOptions sdkOptions) {
-
+        //TODO: Accept env prop which determines URL and other defaults?
         WVJBWebView webView = new WVJBWebView(this.context);
 
         RelativeLayout layout = new RelativeLayout(activity);
