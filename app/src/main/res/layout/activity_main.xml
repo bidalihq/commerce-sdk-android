@@ -16,36 +16,76 @@
             android:id="@+id/with_defaults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:padding="10dp"
             android:text="Defaults"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/with_region"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:padding="10dp"
             android:text="with Region"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/with_brand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:padding="10dp"
             android:text="with Brand"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/with_api_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:padding="10dp"
             android:text="with Payment via API"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/with_bitcoin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:padding="10dp"
             android:text="with Bitcoin"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
 
     </LinearLayout>
 

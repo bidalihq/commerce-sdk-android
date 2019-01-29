@@ -86,6 +86,10 @@ public class BidaliGiftcardsSDK {
             props.put("referralCode", sdkOptions.referralCode);
         }
 
+        if(sdkOptions.apiKey != null) {
+            props.put("apiKey", sdkOptions.apiKey);
+        }
+
         if(sdkOptions.paymentType != null) {
             props.put("paymentType", sdkOptions.paymentType);
         }

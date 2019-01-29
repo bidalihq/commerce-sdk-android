@@ -7,8 +7,8 @@ public class SDKOptions {
     public String currency;
     public String email;
     public String referralCode;
+    public String apiKey;
     public String paymentType;
     public ArrayList<String> cryptoPaymentMethods;
-    public String onOrderCreated;
     public BidaliGiftcardsSDK.BidaliGiftcardsSDKListener listener;
 }
