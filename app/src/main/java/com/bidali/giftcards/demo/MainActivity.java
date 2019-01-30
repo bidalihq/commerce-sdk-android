@@ -1,4 +1,4 @@
-package com.bidali.giftcards.demo;
+package com.bidali.commerce.demo;
 
 import android.content.Intent;
 import android.os.Build;
@@ -8,10 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.bidali.giftcards.BidaliGiftcardsSDK;
+import com.bidali.commerce.BidaliCommerceSDK;
 
-import com.bidali.giftcards.SDKOptions;
-import com.bidali.giftcards.demo.R;
+import com.bidali.commerce.SDKOptions;
+import com.bidali.commerce.demo.R;
 
 import org.json.JSONObject;
 
@@ -26,20 +26,20 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             getSupportActionBar().setElevation(0.5f);
         }
-        final BidaliGiftcardsSDK bidaliGiftcardsSDK = new BidaliGiftcardsSDK(getApplicationContext());
+        final BidaliCommerceSDK bidaliCommerceSDK = new BidaliCommerceSDK(getApplicationContext());
 
         Button withDefaultsButton = (Button) findViewById(R.id.with_defaults);
         withDefaultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SDKOptions options = new SDKOptions();
-                options.listener = new BidaliGiftcardsSDK.BidaliGiftcardsSDKListener() {
+                options.listener = new BidaliCommerceSDK.BidaliCommerceSDKListener() {
                     @Override
                     public void onOrderCreated(JSONObject data) {
                         Log.d("MainActivity", "onOrderCreated called");
                     }
                 };
-                bidaliGiftcardsSDK.show(MainActivity.this, options);
+                bidaliCommerceSDK.show(MainActivity.this, options);
             }
         });
 
@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SDKOptions options = new SDKOptions();
                 options.currency = "AUD";
-                options.listener = new BidaliGiftcardsSDK.BidaliGiftcardsSDKListener() {
+                options.listener = new BidaliCommerceSDK.BidaliCommerceSDKListener() {
                     @Override
                     public void onOrderCreated(JSONObject data) {
                         Log.d("MainActivity", "onOrderCreated called");
                     }
                 };
-                bidaliGiftcardsSDK.show(MainActivity.this, options);
+                bidaliCommerceSDK.show(MainActivity.this, options);
             }
         });
 
@@ -65,13 +65,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SDKOptions options = new SDKOptions();
                 options.brandCode = "amazonus";
-                options.listener = new BidaliGiftcardsSDK.BidaliGiftcardsSDKListener() {
+                options.listener = new BidaliCommerceSDK.BidaliCommerceSDKListener() {
                     @Override
                     public void onOrderCreated(JSONObject data) {
                         Log.d("MainActivity", "onOrderCreated called");
                     }
                 };
-                bidaliGiftcardsSDK.show(MainActivity.this, options);
+                bidaliCommerceSDK.show(MainActivity.this, options);
             }
         });
 
@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SDKOptions options = new SDKOptions();
                 options.paymentType = "API";
-                options.listener = new BidaliGiftcardsSDK.BidaliGiftcardsSDKListener() {
+                options.listener = new BidaliCommerceSDK.BidaliCommerceSDKListener() {
                     @Override
                     public void onOrderCreated(JSONObject data) {
                         Log.d("MainActivity", "onOrderCreated called");
                     }
                 };
-                bidaliGiftcardsSDK.show(MainActivity.this, options);
+                bidaliCommerceSDK.show(MainActivity.this, options);
             }
         });
 
@@ -99,13 +99,13 @@ public class MainActivity extends AppCompatActivity {
                 options.cryptoPaymentMethods = new ArrayList<String>() {{
                     add("BTC");
                 }};
-                options.listener = new BidaliGiftcardsSDK.BidaliGiftcardsSDKListener() {
+                options.listener = new BidaliCommerceSDK.BidaliCommerceSDKListener() {
                     @Override
                     public void onOrderCreated(JSONObject data) {
                         Log.d("MainActivity", "onOrderCreated called");
                     }
                 };
-                bidaliGiftcardsSDK.show(MainActivity.this, options);
+                bidaliCommerceSDK.show(MainActivity.this, options);
             }
         });
     }

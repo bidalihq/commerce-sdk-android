@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '25.0.3'
     defaultConfig {
-        applicationId "com.bidali.giftcards.demo"
+        applicationId "com.bidali.commerce.demo"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1

@@ -1,4 +1,4 @@
-package com.bidali.giftcards;
+package com.bidali.commerce;
 
 import java.util.ArrayList;
 
@@ -10,5 +10,5 @@ public class SDKOptions {
     public String apiKey;
     public String paymentType;
     public ArrayList<String> cryptoPaymentMethods;
-    public BidaliGiftcardsSDK.BidaliGiftcardsSDKListener listener;
+    public BidaliCommerceSDK.BidaliCommerceSDKListener listener;
 }

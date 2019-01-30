@@ -1,4 +1,4 @@
-package com.bidali.giftcards;
+package com.bidali.commerce;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -16,9 +16,9 @@ import org.json.JSONObject;
 import wendu.webviewjavascriptbridge.WVJBWebView;
 
 
-public class BidaliGiftcardsSDK {
+public class BidaliCommerceSDK {
 
-    public interface BidaliGiftcardsSDKListener {
+    public interface BidaliCommerceSDKListener {
         /**
          * <p> Callback method to update when order is created</p>
          */
@@ -28,7 +28,7 @@ public class BidaliGiftcardsSDK {
 
     private Context context;
 
-    public BidaliGiftcardsSDK(Context context) {
+    public BidaliCommerceSDK(Context context) {
         this.context = context;
 
     }
@@ -62,7 +62,7 @@ public class BidaliGiftcardsSDK {
             @Override
             public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
                 //TODO: Close the webview
-                Log.d("BidaliGiftcardsSDK", "Close called");
+                Log.d("BidaliCommerceSDK", "Close called");
                 bidaliViewDialog_.dismiss();
 //                callback.onResult(null);
             }
@@ -103,7 +103,7 @@ public class BidaliGiftcardsSDK {
         webView.callHandler("setupBridge", data, new WVJBWebView.WVJBResponseCallback<Object>() {
             @Override
             public void onResult(Object o) {
-                Log.d("BidaliGiftcardsSDK", "Bridge is setup!");
+                Log.d("BidaliCommerceSDK", "Bridge is setup!");
             }
         });
     }
