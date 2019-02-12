@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.bidali.commerce.demo.MainActivity">
+    tools:context="com.example.demo.MainActivity">
 
     <Button
         android:id="@+id/with_defaults"

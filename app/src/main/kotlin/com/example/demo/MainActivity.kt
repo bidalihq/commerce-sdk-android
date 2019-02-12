@@ -1,12 +1,13 @@
-package com.bidali.commerce.demo
+package com.example.demo
 
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.ActionBar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.Button
+import android.widget.Toast
 
 import com.bidali.commerce.BidaliSDK
 import com.bidali.commerce.BidaliSDKOptions
@@ -32,15 +33,23 @@ class MainActivity : AppCompatActivity() {
 
         with_defaults.setOnClickListener {
             val options = BidaliSDKOptions("12345")
-            options.url = "http://10.0.3.2:3009/embed"
+            options.url = "http://192.168.0.15:3009/embed"
             options.email = "csmith@bidali.com"
             options.listener = object : BidaliSDK.BidaliSDKListener {
                 override fun onPaymentRequest(paymentRequest: PaymentRequest) {
                     Log.d(logTag, "onPaymentRequest called with obj:$paymentRequest")
                     Log.d(logTag, "onPaymentRequest called with amount:" + paymentRequest.amount)
                     Log.d(logTag, "onPaymentRequest called with amount toString:" + paymentRequest.amount)
+                    val dialogBuilder = AlertDialog.Builder(this@MainActivity)
+                    dialogBuilder.setTitle("Buy Giftcards")
+                    dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?")
+                    dialogBuilder.setPositiveButton("Yes, Authorize") { dialog :DialogInterface, whichButton ->
 
+                    }
+                    dialogBuilder.setNegativeButton("No") { dialog :DialogInterface, whichButton ->
 
+                    }
+                    dialogBuilder.show()
                 }
             }
             bidaliSDK.show(this, options)

@@ -49,7 +49,7 @@ class BidaliSDK(private val context: Context) {
         dialog.show()
     }
 
-    private fun setupBridge(sdkOptions: BidaliSDKOptions) {
+    private fun setupHandlers(sdkOptions: BidaliSDKOptions) {
         val props = HashMap<String, Any?>()
 
         props["apiKey"] = sdkOptions.apiKey
@@ -66,7 +66,7 @@ class BidaliSDK(private val context: Context) {
             props["paymentCurrencies"] = sdkOptions.paymentCurrencies
         }
 
-        val data = JSONObject(props)
+        val bridgeInitializationProps = JSONObject(props)
 
         val onCloseHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
             Log.d(tag, "onCloseHandler called")
@@ -82,8 +82,30 @@ class BidaliSDK(private val context: Context) {
             dialog.dismiss()
         }
 
+        val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
+            Log.d(tag, "readyForSetupHandler called")
+            webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
+        }
+
         webView.registerHandler("onPaymentRequest", onPaymentRequestHandler)
         webView.registerHandler("onClose", onCloseHandler)
+        webView.registerHandler("readyForSetup", readyForSetupHandler)
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d(tag, "onPageFinished:$url")
+                webView.visibility = View.VISIBLE
+                loadingWebView.visibility = View.GONE
+                super.onPageFinished(view, url)
+            }
+
+            //TODO: Handle loading errors appropriately
+        }
+    }
+
+    fun show(context: Context, sdkOptions: BidaliSDKOptions) {
+        this.setupLayout(context)
+        this.setupHandlers(sdkOptions)
 
         var widgetUrl = urls[defaultEnv]
         if (sdkOptions.url != null) {
@@ -92,25 +114,7 @@ class BidaliSDK(private val context: Context) {
             widgetUrl = urls[sdkOptions.env]
         }
 
-        Log.d(tag, widgetUrl)
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                Log.d(tag, "onPageFinished:$url")
-                webView.callHandler("setupBridge", data, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
-                webView.visibility = View.VISIBLE
-                loadingWebView.visibility = View.GONE
-                super.onPageFinished(view, url)
-            }
-
-            //TODO: Handle loading errors appropriately
-        }
-
+        Log.d(tag, "loading $widgetUrl")
         webView.loadUrl(widgetUrl)
-    }
-
-    fun show(context: Context, sdkOptions: BidaliSDKOptions) {
-        this.setupLayout(context)
-        this.setupBridge(sdkOptions)
     }
 }
