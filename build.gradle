@@ -11,6 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'digital.wup:android-maven-publish:3.6.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -18,9 +19,7 @@ buildscript {
     }
 }
 
-plugins {
-    id 'digital.wup.android-maven-publish' version '3.6.2'
-}
+apply plugin: 'digital.wup.android-maven-publish'
 
 allprojects {
     repositories {
