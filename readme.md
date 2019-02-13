@@ -1,4 +1,5 @@
 # `Bidali Commerce Android SDK`
+[![](https://jitpack.io/v/bidalihq/commerce-sdk-android.svg)](https://jitpack.io/#bidalihq/commerce-sdk-android)
 
 ### Installing with gradle
 
