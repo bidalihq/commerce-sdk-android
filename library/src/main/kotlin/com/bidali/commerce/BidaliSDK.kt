@@ -82,7 +82,7 @@ class BidaliSDK(private val context: Context) {
             dialog.dismiss()
         }
 
-        val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
+        val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
             Log.d(tag, "readyForSetupHandler called")
             webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
         }

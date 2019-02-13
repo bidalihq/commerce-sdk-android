@@ -42,10 +42,10 @@ class MainActivity : AppCompatActivity() {
                     val dialogBuilder = AlertDialog.Builder(this@MainActivity)
                     dialogBuilder.setTitle("Buy Giftcards")
                     dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?")
-                    dialogBuilder.setPositiveButton("Yes, Authorize") { dialog :DialogInterface, whichButton ->
+                    dialogBuilder.setPositiveButton("Yes, Authorize") { _:DialogInterface, _ ->
 
                     }
-                    dialogBuilder.setNegativeButton("No") { dialog :DialogInterface, whichButton ->
+                    dialogBuilder.setNegativeButton("No") { _:DialogInterface, _ ->
 
                     }
                     dialogBuilder.show()
