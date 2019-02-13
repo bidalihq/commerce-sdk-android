@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
 
 import com.bidali.commerce.BidaliSDK
 import com.bidali.commerce.BidaliSDKOptions
