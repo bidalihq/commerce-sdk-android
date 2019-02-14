@@ -4,8 +4,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'digital.wup.android-maven-publish'
 
-group='com.github.bidalihq'
-version='0.1'
+group=library_group
+version=library_version
 
 android {
     compileSdkVersion 28
