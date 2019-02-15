@@ -2,6 +2,7 @@ package com.bidali.commerce
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,26 @@ class BidaliSDK(private val context: Context) {
         fun onPaymentRequest(paymentRequest: PaymentRequest)
     }
 
+    private fun getApplicationName(context: Context): String {
+        val applicationInfo = context.applicationInfo
+        val stringId = applicationInfo.labelRes
+        return if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else context.getString(stringId)
+    }
+
+    private fun getPlatform(context: Context): HashMap<String, Any?> {
+        val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        val platform = HashMap<String, Any?>()
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        platform["osName"] = "android"
+        platform["osVersion"] = sdkVersion
+        platform["osRelease"] = release
+        platform["appVersion"] = pInfo.versionName
+        platform["appName"] = getApplicationName(context)
+        platform["appId"] = context.packageName
+        return platform
+    }
+
     private fun setupLayout(context: Context) {
         webView = WVJBWebView(this.context)
         webView.visibility = View.GONE
@@ -49,7 +70,7 @@ class BidaliSDK(private val context: Context) {
         dialog.show()
     }
 
-    private fun setupHandlers(sdkOptions: BidaliSDKOptions) {
+    private fun setupHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
         val props = HashMap<String, Any?>()
 
         props["apiKey"] = sdkOptions.apiKey
@@ -65,6 +86,8 @@ class BidaliSDK(private val context: Context) {
         if (sdkOptions.paymentCurrencies != null) {
             props["paymentCurrencies"] = sdkOptions.paymentCurrencies
         }
+
+        props["platform"] = getPlatform(context)
 
         val bridgeInitializationProps = JSONObject(props)
 
@@ -105,7 +128,7 @@ class BidaliSDK(private val context: Context) {
 
     fun show(context: Context, sdkOptions: BidaliSDKOptions) {
         this.setupLayout(context)
-        this.setupHandlers(sdkOptions)
+        this.setupHandlers(context, sdkOptions)
 
         var widgetUrl = urls[defaultEnv]
         if (sdkOptions.url != null) {
