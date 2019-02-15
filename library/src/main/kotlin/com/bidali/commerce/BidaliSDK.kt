@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
-import org.json.JSONObject
-import wendu.webviewjavascriptbridge.WVJBWebView
-import java.math.BigDecimal
+import wendu.dsbridge.DWebView
 import java.util.*
 
 class BidaliSDK(private val context: Context) {
@@ -25,15 +23,17 @@ class BidaliSDK(private val context: Context) {
         }
     }
     private lateinit var dialog: Dialog
-    private lateinit var webView: WVJBWebView
+    private lateinit var webView: DWebView
     private lateinit var loadingWebView: WebView
 
     interface BidaliSDKListener {
         fun onPaymentRequest(paymentRequest: PaymentRequest)
     }
 
-    private fun setupLayout(context: Context) {
-        webView = WVJBWebView(this.context)
+    private fun setupNewLayout(context: Context) {
+        webView = DWebView(this.context)
+        webView.disableJavascriptDialogBlock(true)
+        DWebView.setWebContentsDebuggingEnabled(true)
         webView.visibility = View.GONE
         loadingWebView = WebView(this.context)
         loadingWebView.loadData(loadingHtmlString, "text/html", "UTF-8")
@@ -49,48 +49,9 @@ class BidaliSDK(private val context: Context) {
         dialog.show()
     }
 
-    private fun setupHandlers(sdkOptions: BidaliSDKOptions) {
-        val props = HashMap<String, Any?>()
+    private fun setupNewHandlers(sdkOptions: BidaliSDKOptions) {
 
-        props["apiKey"] = sdkOptions.apiKey
-
-        if (sdkOptions.email != null) {
-            props["email"] = sdkOptions.email
-        }
-
-        if (sdkOptions.paymentType != null) {
-            props["paymentType"] = sdkOptions.paymentType
-        }
-
-        if (sdkOptions.paymentCurrencies != null) {
-            props["paymentCurrencies"] = sdkOptions.paymentCurrencies
-        }
-
-        val bridgeInitializationProps = JSONObject(props)
-
-        val onCloseHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-            Log.d(tag, "onCloseHandler called")
-            dialog.dismiss()
-        }
-
-        val onPaymentRequestHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
-            Log.d(tag, "onPaymentRequest called:" + data.javaClass + ":" + data)
-            val amount = BigDecimal(data.getString("amount"))
-            val currency = data.getString("currency")
-            val address = data.getString("address")
-            sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address))
-            dialog.dismiss()
-        }
-
-        val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-            Log.d(tag, "readyForSetupHandler called")
-            webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
-        }
-
-        webView.registerHandler("onPaymentRequest", onPaymentRequestHandler)
-        webView.registerHandler("onClose", onCloseHandler)
-        webView.registerHandler("readyForSetup", readyForSetupHandler)
-
+        webView.addJavascriptObject(JSAPI(sdkOptions, webView, dialog), null)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(tag, "onPageFinished:$url")
@@ -104,8 +65,8 @@ class BidaliSDK(private val context: Context) {
     }
 
     fun show(context: Context, sdkOptions: BidaliSDKOptions) {
-        this.setupLayout(context)
-        this.setupHandlers(sdkOptions)
+        this.setupNewLayout(context)
+        this.setupNewHandlers(sdkOptions)
 
         var widgetUrl = urls[defaultEnv]
         if (sdkOptions.url != null) {
