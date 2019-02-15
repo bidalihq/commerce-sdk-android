@@ -1,6 +1,7 @@
 package com.bidali.commerce
 
 import android.app.Dialog
+import android.os.Build
 import android.support.annotation.Keep
 import android.util.Log
 import android.webkit.JavascriptInterface
@@ -13,6 +14,16 @@ import java.util.HashMap
 class JSAPI(private val sdkOptions: BidaliSDKOptions, private val webView: DWebView, private val dialog: Dialog) {
     private val tag = "BidaliSDK:JSAPI"
     private val bridgeInitializationProps: JSONObject
+
+    private fun getPlatform(): HashMap<String, Any?> {
+        val platform = HashMap<String, Any?>()
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        platform["name"] = "android"
+        platform["version"] = sdkVersion
+        platform["release"] = release
+        return platform
+    }
 
     init {
         val props = HashMap<String, Any?>()
@@ -30,6 +41,8 @@ class JSAPI(private val sdkOptions: BidaliSDKOptions, private val webView: DWebV
         if (sdkOptions.paymentCurrencies != null) {
             props["paymentCurrencies"] = sdkOptions.paymentCurrencies
         }
+
+        props["platform"] = getPlatform()
         bridgeInitializationProps = JSONObject(props)
     }
 
