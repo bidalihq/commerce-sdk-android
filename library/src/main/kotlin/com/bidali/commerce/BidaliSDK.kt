@@ -49,9 +49,9 @@ class BidaliSDK(private val context: Context) {
         dialog.show()
     }
 
-    private fun setupNewHandlers(sdkOptions: BidaliSDKOptions) {
+    private fun setupNewHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
 
-        webView.addJavascriptObject(JSAPI(sdkOptions, webView, dialog), null)
+        webView.addJavascriptObject(JSAPI(context, sdkOptions, webView, dialog), null)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(tag, "onPageFinished:$url")
@@ -66,7 +66,7 @@ class BidaliSDK(private val context: Context) {
 
     fun show(context: Context, sdkOptions: BidaliSDKOptions) {
         this.setupNewLayout(context)
-        this.setupNewHandlers(sdkOptions)
+        this.setupNewHandlers(context, sdkOptions)
 
         var widgetUrl = urls[defaultEnv]
         if (sdkOptions.url != null) {
