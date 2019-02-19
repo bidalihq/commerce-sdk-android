@@ -5,10 +5,9 @@
 
 1. Add the JitPack repository to your build file
 
-   ```java
+   ```groovy
    allprojects {
      repositories {
-       ...
        maven { url 'https://jitpack.io' }
      }
    }
@@ -16,7 +15,7 @@
 
 2. Add the dependency
 
-   ```java
+   ```groovy
    dependencies {
      compile 'com.github.bidalihq:commerce-sdk-android:0.0.1'
    }
