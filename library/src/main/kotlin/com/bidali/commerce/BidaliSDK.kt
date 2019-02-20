@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.browse
 import org.json.JSONObject
 import wendu.webviewjavascriptbridge.WVJBWebView
 import java.math.BigDecimal
@@ -44,12 +47,13 @@ class BidaliSDK(private val context: Context) {
         val platform = HashMap<String, Any?>()
         val release = Build.VERSION.RELEASE
         val sdkVersion = Build.VERSION.SDK_INT
-        platform["osName"] = "android"
-        platform["osVersion"] = sdkVersion
-        platform["osRelease"] = release
-        platform["appVersion"] = pInfo.versionName
         platform["appName"] = getApplicationName(context)
+        platform["appVersion"] = pInfo.versionName
         platform["appId"] = context.packageName
+        platform["osName"] = "android"
+        platform["osVersion"] = release
+        platform["osVersionCode"] = sdkVersion
+        platform["locale"] = Locale.getDefault().toString()
         return platform
     }
 
@@ -71,59 +75,81 @@ class BidaliSDK(private val context: Context) {
     }
 
     private fun setupHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
-        val props = HashMap<String, Any?>()
 
-        props["apiKey"] = sdkOptions.apiKey
+        doAsync {
+            //Execute all the lon running tasks here
+            val props = HashMap<String, Any?>()
 
-        if (sdkOptions.email != null) {
-            props["email"] = sdkOptions.email
-        }
+            props["apiKey"] = sdkOptions.apiKey
 
-        if (sdkOptions.paymentType != null) {
-            props["paymentType"] = sdkOptions.paymentType
-        }
-
-        if (sdkOptions.paymentCurrencies != null) {
-            props["paymentCurrencies"] = sdkOptions.paymentCurrencies
-        }
-
-        props["platform"] = getPlatform(context)
-
-        val bridgeInitializationProps = JSONObject(props)
-
-        val onCloseHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-            Log.d(tag, "onCloseHandler called")
-            dialog.dismiss()
-        }
-
-        val onPaymentRequestHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
-            Log.d(tag, "onPaymentRequest called:" + data.javaClass + ":" + data)
-            val amount = BigDecimal(data.getString("amount"))
-            val currency = data.getString("currency")
-            val address = data.getString("address")
-            sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address))
-            dialog.dismiss()
-        }
-
-        val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-            Log.d(tag, "readyForSetupHandler called")
-            webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
-        }
-
-        webView.registerHandler("onPaymentRequest", onPaymentRequestHandler)
-        webView.registerHandler("onClose", onCloseHandler)
-        webView.registerHandler("readyForSetup", readyForSetupHandler)
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                Log.d(tag, "onPageFinished:$url")
-                webView.visibility = View.VISIBLE
-                loadingWebView.visibility = View.GONE
-                super.onPageFinished(view, url)
+            if (sdkOptions.email != null) {
+                props["email"] = sdkOptions.email
             }
 
-            //TODO: Handle loading errors appropriately
+            if (sdkOptions.paymentType != null) {
+                props["paymentType"] = sdkOptions.paymentType
+            }
+
+            if (sdkOptions.paymentCurrencies != null) {
+                props["paymentCurrencies"] = sdkOptions.paymentCurrencies
+            }
+
+            props["platform"] = getPlatform(context)
+
+            val bridgeInitializationProps = JSONObject(props)
+
+
+            uiThread {
+                //Update the UI thread here
+                val onLogHandler = WVJBWebView.WVJBHandler<Object, Any> { data, _ ->
+                    Log.d(tag, "onLog called with: $data")
+                }
+
+                val onCloseHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
+                    Log.d(tag, "onCloseHandler called")
+                    dialog.dismiss()
+                }
+
+                val openUrlHandler = WVJBWebView.WVJBHandler<String, Any> { url, _ ->
+                    Log.d(tag, "openUrlHandler called$url")
+                    context.browse(url)
+                }
+
+                val onPaymentRequestHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
+                    Log.d(tag, "onPaymentRequest called:" + data.javaClass + ":" + data)
+                    val amount = BigDecimal(data.getString("amount"))
+                    val currency = data.getString("currency")
+                    val address = data.getString("address")
+                    val chargeId = data.getString("chargeId")
+                    val description = data.getString("description")
+                    sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description))
+                    dialog.dismiss()
+                }
+
+                val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
+                    Log.d(tag, "readyForSetupHandler called")
+                    webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
+                }
+
+                webView.registerHandler("log", onLogHandler)
+                webView.registerHandler("onPaymentRequest", onPaymentRequestHandler)
+                webView.registerHandler("onClose", onCloseHandler)
+                webView.registerHandler("openUrl", openUrlHandler)
+                webView.registerHandler("readyForSetup", readyForSetupHandler)
+
+                webView.webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        Log.d(tag, "onPageFinished:$url")
+                        webView.visibility = View.VISIBLE
+                        loadingWebView.visibility = View.GONE
+                        super.onPageFinished(view, url)
+                    }
+
+                    //TODO: Handle loading errors appropriately
+                }
+            }
         }
+
     }
 
     fun show(context: Context, sdkOptions: BidaliSDKOptions) {
