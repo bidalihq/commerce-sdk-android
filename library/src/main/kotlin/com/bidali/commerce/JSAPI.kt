@@ -14,28 +14,7 @@ import java.util.HashMap
 
 class JSAPI(private val context : Context, private val sdkOptions: BidaliSDKOptions, private val webView: DWebView, private val dialog: Dialog) {
     private val tag = "BidaliSDK:JSAPI"
-    private val bridgeInitializationProps: JSONObject
-
-    init {
-        val props = HashMap<String, Any?>()
-
-        props["apiKey"] = sdkOptions.apiKey
-
-        if (sdkOptions.email != null) {
-            props["email"] = sdkOptions.email
-        }
-
-        if (sdkOptions.paymentType != null) {
-            props["paymentType"] = sdkOptions.paymentType
-        }
-
-        if (sdkOptions.paymentCurrencies != null) {
-            props["paymentCurrencies"] = sdkOptions.paymentCurrencies
-        }
-
-        props["platform"] = getPlatform(context)
-        bridgeInitializationProps = JSONObject(props)
-    }
+    private val bridgeInitializationProps: JSONObject = buildProps(context, sdkOptions)
 
     @Keep
     @JavascriptInterface
