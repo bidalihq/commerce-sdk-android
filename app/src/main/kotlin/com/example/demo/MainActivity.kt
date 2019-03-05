@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val baseUrl = "http://10.0.3.2:3009/embed"
         setContentView(R.layout.activity_main)
         if (Build.VERSION.SDK_INT >= 21) {
             Objects.requireNonNull<ActionBar>(supportActionBar).elevation = 0.5f
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         with_defaults.setOnClickListener {
             val options = BidaliSDKOptions("12345")
-            options.url = "http://192.168.0.15:3009/embed"
+            options.url = baseUrl
             options.email = "csmith@bidali.com"
             options.listener = object : BidaliSDK.BidaliSDKListener {
                 override fun onPaymentRequest(paymentRequest: PaymentRequest) {
@@ -40,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                     Log.d(logTag, "onPaymentRequest called with amount:" + paymentRequest.amount)
                     Log.d(logTag, "onPaymentRequest called with amount toString:" + paymentRequest.amount)
                     val dialogBuilder = AlertDialog.Builder(this@MainActivity)
-                    dialogBuilder.setTitle("Buy Giftcards")
-                    dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?")
+                    dialogBuilder.setTitle("Buy ${paymentRequest.description}")
+                    dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?\n${paymentRequest.chargeId}")
                     dialogBuilder.setPositiveButton("Yes, Authorize") { _:DialogInterface, _ ->
 
                     }
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         with_bitcoin.setOnClickListener {
             val options = BidaliSDKOptions("12345")
-            options.url = "http://10.0.3.2:3009/embed"
+            options.url = baseUrl
             options.paymentCurrencies = object : ArrayList<String>() {
                 init {
                     add("BTC")

@@ -34,6 +34,7 @@ class BidaliSDK(private val context: Context) {
         webView = DWebView(this.context)
         webView.disableJavascriptDialogBlock(true)
         DWebView.setWebContentsDebuggingEnabled(true)
+
         webView.visibility = View.GONE
         loadingWebView = WebView(this.context)
         loadingWebView.loadData(loadingHtmlString, "text/html", "UTF-8")
@@ -49,6 +50,7 @@ class BidaliSDK(private val context: Context) {
         dialog.show()
     }
 
+
     private fun setupNewHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
 
         webView.addJavascriptObject(JSAPI(context, sdkOptions, webView, dialog), null)
@@ -58,8 +60,8 @@ class BidaliSDK(private val context: Context) {
                 webView.visibility = View.VISIBLE
                 loadingWebView.visibility = View.GONE
                 super.onPageFinished(view, url)
-            }
 
+            }
             //TODO: Handle loading errors appropriately
         }
     }

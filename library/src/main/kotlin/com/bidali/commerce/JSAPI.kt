@@ -6,6 +6,7 @@ import android.os.Build
 import android.support.annotation.Keep
 import android.util.Log
 import android.webkit.JavascriptInterface
+import org.jetbrains.anko.browse
 import org.json.JSONObject
 import wendu.dsbridge.DWebView
 import wendu.dsbridge.OnReturnValue
@@ -70,7 +71,9 @@ class JSAPI(private val context : Context, private val sdkOptions: BidaliSDKOpti
         val amount = BigDecimal(data.getString("amount"))
         val currency = data.getString("currency")
         val address = data.getString("address")
-        sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address))
+        val chargeId = data.getString("chargeId")
+        val description = data.getString("description")
+        sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description))
         dialog.dismiss()
     }
 
@@ -79,6 +82,14 @@ class JSAPI(private val context : Context, private val sdkOptions: BidaliSDKOpti
         Log.d(tag, "onCloseHandler called")
         dialog.dismiss()
     }
+
+    @JavascriptInterface
+    fun openUrl(data: Object) {
+        val url = data as String
+        Log.d(tag, "openUrlHandler called$url")
+        context.browse(url)
+    }
+
 
     @JavascriptInterface
     fun readyForSetup(data: Object) {
