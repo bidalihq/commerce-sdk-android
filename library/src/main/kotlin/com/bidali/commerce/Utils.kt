@@ -20,7 +20,6 @@ private fun getApplicationName(context: Context): String {
     return if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else context.getString(stringId)
 }
 
-
 fun getPlatform(context: Context): HashMap<String, Any?> {
     val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
     val platform = HashMap<String, Any?>()
@@ -67,4 +66,3 @@ fun buildProps(context: Context, sdkOptions: BidaliSDKOptions): JSONObject {
     props["platform"] = getPlatform(context)
     return JSONObject(props)
 }
-
