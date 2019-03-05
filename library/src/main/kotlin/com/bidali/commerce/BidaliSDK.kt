@@ -2,7 +2,6 @@ package com.bidali.commerce
 
 import android.app.Dialog
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -34,27 +33,6 @@ class BidaliSDK(private val context: Context) {
 
     interface BidaliSDKListener {
         fun onPaymentRequest(paymentRequest: PaymentRequest)
-    }
-
-    private fun getApplicationName(context: Context): String {
-        val applicationInfo = context.applicationInfo
-        val stringId = applicationInfo.labelRes
-        return if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else context.getString(stringId)
-    }
-
-    private fun getPlatform(context: Context): HashMap<String, Any?> {
-        val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        val platform = HashMap<String, Any?>()
-        val release = Build.VERSION.RELEASE
-        val sdkVersion = Build.VERSION.SDK_INT
-        platform["appName"] = getApplicationName(context)
-        platform["appVersion"] = pInfo.versionName
-        platform["appId"] = context.packageName
-        platform["osName"] = "android"
-        platform["osVersion"] = release
-        platform["osVersionCode"] = sdkVersion
-        platform["locale"] = Locale.getDefault().toString()
-        return platform
     }
 
     private fun setupLayout(context: Context) {
