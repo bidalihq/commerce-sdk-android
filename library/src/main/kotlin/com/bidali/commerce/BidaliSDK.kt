@@ -30,7 +30,7 @@ class BidaliSDK(private val context: Context) {
         fun onPaymentRequest(paymentRequest: PaymentRequest)
     }
 
-    private fun setupNewLayout(context: Context) {
+    private fun setupLayout(context: Context) {
         webView = DWebView(this.context)
         webView.disableJavascriptDialogBlock(true)
         DWebView.setWebContentsDebuggingEnabled(true)
@@ -51,7 +51,7 @@ class BidaliSDK(private val context: Context) {
     }
 
 
-    private fun setupNewHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
+    private fun setupHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
 
         webView.addJavascriptObject(JSAPI(context, sdkOptions, webView, dialog), null)
         webView.webViewClient = object : WebViewClient() {
@@ -67,8 +67,8 @@ class BidaliSDK(private val context: Context) {
     }
 
     fun show(context: Context, sdkOptions: BidaliSDKOptions) {
-        this.setupNewLayout(context)
-        this.setupNewHandlers(context, sdkOptions)
+        this.setupLayout(context)
+        this.setupHandlers(context, sdkOptions)
 
         var widgetUrl = urls[defaultEnv]
         if (sdkOptions.url != null) {
