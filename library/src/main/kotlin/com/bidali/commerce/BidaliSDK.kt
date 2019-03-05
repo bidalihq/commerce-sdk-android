@@ -19,14 +19,6 @@ import java.util.*
 class BidaliSDK(private val context: Context) {
     private val loadingHtmlString = "<html><head><style type='text/css'>html, body {height: 100%;background: #f8f8fc;left: 0;margin: 0;overflow: hidden;text-align: center;top: 0;width: 100%;}.spinner { height: 60px;max-height: 60vmin;max-width: 60vmin;left: 50%;position: absolute;top: 50%;transform: translateX(-50%) translateY(-50%);width: 60px;z-index: 10;} .spinner .loader { animation: rotation .7s infinite linear;border: 3px solid rgba(0, 0, 0, .15);border-top-color: #4B4DF1;border-radius: 100%;box-sizing: border-box;height: 100%;width: 100%;}@keyframes rotation {from { transform: rotate(0deg); }to { transform: rotate(359deg); }}</style></head><body><div class=\"spinner\"><div class=\"loader\"></div></div></html>"
     private val tag = "BidaliSDK"
-    private val defaultEnv = "production"
-    private val urls = object : HashMap<String, String>() {
-        init {
-            put("local", "http://10.0.3.2:3009/embed")
-            put("staging", "https://commerce.staging.bidali.com/embed")
-            put("production", "https://commerce.bidali.com/embed")
-        }
-    }
     private lateinit var dialog: Dialog
     private lateinit var webView: WVJBWebView
     private lateinit var loadingWebView: WebView
@@ -55,27 +47,8 @@ class BidaliSDK(private val context: Context) {
     private fun setupHandlers(context: Context, sdkOptions: BidaliSDKOptions) {
 
         doAsync {
-            //Execute all the lon running tasks here
-            val props = HashMap<String, Any?>()
 
-            props["apiKey"] = sdkOptions.apiKey
-
-            if (sdkOptions.email != null) {
-                props["email"] = sdkOptions.email
-            }
-
-            if (sdkOptions.paymentType != null) {
-                props["paymentType"] = sdkOptions.paymentType
-            }
-
-            if (sdkOptions.paymentCurrencies != null) {
-                props["paymentCurrencies"] = sdkOptions.paymentCurrencies
-            }
-
-            props["platform"] = getPlatform(context)
-
-            val bridgeInitializationProps = JSONObject(props)
-
+            val bridgeInitializationProps = buildProps(context, sdkOptions)
 
             uiThread {
                 //Update the UI thread here
@@ -134,13 +107,7 @@ class BidaliSDK(private val context: Context) {
         this.setupLayout(context)
         this.setupHandlers(context, sdkOptions)
 
-        var widgetUrl = urls[defaultEnv]
-        if (sdkOptions.url != null) {
-            widgetUrl = sdkOptions.url
-        } else if (urls[sdkOptions.env] != null) {
-            widgetUrl = urls[sdkOptions.env]
-        }
-
+        val widgetUrl = urlForEnvironment(sdkOptions)
         Log.d(tag, "loading $widgetUrl")
         webView.loadUrl(widgetUrl)
     }
