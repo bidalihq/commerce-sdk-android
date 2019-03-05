@@ -34,6 +34,7 @@ class JSAPI(private val context : Context, private val sdkOptions: BidaliSDKOpti
         platform["appVersion"] = pInfo.versionName
         platform["appName"] = getApplicationName(context)
         platform["appId"] = context.packageName
+        platform["sdkVersion"] = BuildConfig.VERSION_NAME
         return platform
     }
 
