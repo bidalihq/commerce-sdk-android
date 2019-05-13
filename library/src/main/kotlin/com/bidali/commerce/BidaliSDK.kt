@@ -51,7 +51,7 @@ class BidaliSDK(private val context: Context) {
 
             uiThread {
                 //Update the UI thread here
-                val onLogHandler = WVJBWebView.WVJBHandler<Object, Any> { data, _ ->
+                val onLogHandler = WVJBWebView.WVJBHandler<Any, Any> { data, _ ->
                     Log.d(tag, "onLog called with: $data")
                 }
 
@@ -72,7 +72,9 @@ class BidaliSDK(private val context: Context) {
                     val address = data.getString("address")
                     val chargeId = data.getString("chargeId")
                     val description = data.getString("description")
-                    sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description))
+                    val extraId = data.getString("extraId")
+                    val extraIdName = data.getString("extraIdName")
+                    sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description, extraId, extraIdName))
                     dialog.dismiss()
                 }
 
