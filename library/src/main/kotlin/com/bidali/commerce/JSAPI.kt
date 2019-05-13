@@ -30,8 +30,10 @@ class JSAPI(private val context : Context, private val sdkOptions: BidaliSDKOpti
         val currency = data.getString("currency")
         val address = data.getString("address")
         val chargeId = data.getString("chargeId")
-        val description = data.getString("description")
-        sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description))
+        val chargeDescription = data.getString("description")
+        val extraId = data.getString("extraId")
+        val extraIdName = data.getString("extraIdName")
+        sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, chargeDescription, extraId, extraIdName))
         dialog.dismiss()
     }
 
