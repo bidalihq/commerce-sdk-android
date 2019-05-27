@@ -11,6 +11,7 @@ import android.util.Log
 import com.bidali.commerce.BidaliSDK
 import com.bidali.commerce.BidaliSDKOptions
 import com.bidali.commerce.PaymentRequest
+import com.bidali.commerce.PaymentType
 
 import java.util.ArrayList
 import java.util.Objects
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d(logTag, "onPaymentRequest called with amount:" + paymentRequest.amount)
                     Log.d(logTag, "onPaymentRequest called with amount toString:" + paymentRequest.amount)
                     val dialogBuilder = AlertDialog.Builder(this@MainActivity)
-                    dialogBuilder.setTitle("Buy ${paymentRequest.description}")
+                    dialogBuilder.setTitle("Buy ${paymentRequest.chargeDescription}")
                     dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?\n${paymentRequest.chargeId}")
                     dialogBuilder.setPositiveButton("Yes, Authorize") { _:DialogInterface, _ ->
 

@@ -57,6 +57,8 @@ fun buildProps(context: Context, sdkOptions: BidaliSDKOptions): JSONObject {
 
     if (sdkOptions.paymentType != null) {
         props["paymentType"] = sdkOptions.paymentType!!.description
+    } else {
+        props["paymentType"] = PaymentType.PREFILL.description;
     }
 
     if (sdkOptions.paymentCurrencies != null) {
