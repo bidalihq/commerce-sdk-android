@@ -1,12 +1,13 @@
 package com.bidali.commerce
 
+import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.RelativeLayout
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -65,6 +66,14 @@ class BidaliSDK(private val context: Context) {
                     context.browse(url)
                 }
 
+                val handleLoadingError = { urlString: String ->
+                    val widgetUrl = urlForEnvironment(sdkOptions)
+                    Log.d(tag, "handleLoadingError $urlString")
+                    if(urlString == widgetUrl) {
+                        dialog.dismiss()
+                    }
+                }
+
                 val onPaymentRequestHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
                     Log.d(tag, "onPaymentRequest called:" + data.javaClass + ":" + data)
                     val amount = BigDecimal(data.getString("amount"))
@@ -97,7 +106,23 @@ class BidaliSDK(private val context: Context) {
                         super.onPageFinished(view, url)
                     }
 
-                    //TODO: Handle loading errors appropriately
+
+                    override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+                        Log.d(tag, "onReceivedError deprecated $failingUrl $errorCode $description")
+                        handleLoadingError(failingUrl)
+                    }
+
+                    @TargetApi(Build.VERSION_CODES.M)
+                    override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+                        Log.d(tag, "onReceivedError ${request.url} ${error.errorCode} ${error.description}")
+                        handleLoadingError(request.url.toString())
+                    }
+
+                    @TargetApi(Build.VERSION_CODES.M)
+                    override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, errorResponse: WebResourceResponse) {
+                        Log.d(tag, "onReceivedHttpError ${request.url} ${errorResponse.statusCode} ${errorResponse.reasonPhrase}")
+                        handleLoadingError(request.url.toString())
+                    }
                 }
             }
         }
