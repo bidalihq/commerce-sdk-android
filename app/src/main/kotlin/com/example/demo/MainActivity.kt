@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val baseUrl = "http://10.0.3.2:3009/embed"
         setContentView(R.layout.activity_main)
         if (Build.VERSION.SDK_INT >= 21) {
             Objects.requireNonNull<ActionBar>(supportActionBar).elevation = 0.5f
@@ -34,8 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 
         with_defaults.setOnClickListener {
-            val options = BidaliSDKOptions("12345")
-            options.url = baseUrl
+            val options = BidaliSDKOptions("YOUR API KEY")
             options.email = "csmith@bidali.com"
             options.listener = object : BidaliSDK.BidaliSDKListener {
                 override fun onPaymentRequest(paymentRequest: PaymentRequest) {
@@ -45,10 +43,10 @@ class MainActivity : AppCompatActivity() {
                     val dialogBuilder = AlertDialog.Builder(this@MainActivity)
                     dialogBuilder.setTitle("Buy ${paymentRequest.chargeDescription}")
                     dialogBuilder.setMessage("Authorize this transaction for ${paymentRequest.amount} ${paymentRequest.currency}?\n${paymentRequest.chargeId}")
-                    dialogBuilder.setPositiveButton("Yes, Authorize") { _:DialogInterface, _ ->
+                    dialogBuilder.setPositiveButton("Yes, Authorize") { _: DialogInterface, _ ->
 
                     }
-                    dialogBuilder.setNegativeButton("No") { _:DialogInterface, _ ->
+                    dialogBuilder.setNegativeButton("No") { _: DialogInterface, _ ->
 
                     }
                     dialogBuilder.show()
@@ -58,8 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         with_bitcoin.setOnClickListener {
-            val options = BidaliSDKOptions("12345")
-            options.url = baseUrl
+            val options = BidaliSDKOptions("YOUR API KEY")
             options.paymentCurrencies = object : ArrayList<String>() {
                 init {
                     add("BTC")

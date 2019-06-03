@@ -87,38 +87,42 @@ class BidaliSDK(private val context: Context) {
                 }
 
                 val onCloseHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-                    Log.d(tag, "onCloseHandler called")
                     dialog.dismiss()
                 }
 
                 val openUrlHandler = WVJBWebView.WVJBHandler<String, Any> { url, _ ->
-                    Log.d(tag, "openUrlHandler called$url")
                     context.browse(url)
                 }
 
                 val handleLoadingError = { urlString: String ->
                     val widgetUrl = urlForEnvironment(sdkOptions)
-                    Log.d(tag, "handleLoadingError $urlString")
-                    if(urlString == widgetUrl) {
+                    if (urlString == widgetUrl) {
                         dialog.dismiss()
                     }
                 }
 
                 val onPaymentRequestHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { data, _ ->
-                    Log.d(tag, "onPaymentRequest called:" + data.javaClass + ":" + data)
                     val amount = BigDecimal(data.getString("amount"))
                     val currency = data.getString("currency")
                     val address = data.getString("address")
                     val chargeId = data.getString("chargeId")
                     val description = data.getString("description")
-                    val extraId = data.getString("extraId")
-                    val extraIdName = data.getString("extraIdName")
+
+                    var extraId: String? = null
+                    if (data.has("extraId")) {
+                        extraId = data.getString("extraId")
+                    }
+
+                    var extraIdName: String? = null;
+                    if (data.has("extraIdName")) {
+                        extraIdName = data.getString("extraIdName")
+                    }
+
                     sdkOptions.listener?.onPaymentRequest(PaymentRequest(amount, currency, address, chargeId, description, extraId, extraIdName))
                     dialog.dismiss()
                 }
 
                 val readyForSetupHandler = WVJBWebView.WVJBHandler<JSONObject, Any> { _, _ ->
-                    Log.d(tag, "readyForSetupHandler called")
                     webView.callHandler("setupBridge", bridgeInitializationProps, WVJBWebView.WVJBResponseCallback<Any> { Log.d(tag, "Bridge is setup!") })
                 }
 
@@ -130,7 +134,6 @@ class BidaliSDK(private val context: Context) {
 
                 webView.webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView?, url: String?) {
-                        Log.d(tag, "onPageFinished:$url")
                         webView.visibility = View.VISIBLE
                         loadingWebView.visibility = View.GONE
                         closeButton.visibility = View.GONE
@@ -139,19 +142,19 @@ class BidaliSDK(private val context: Context) {
 
 
                     override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
-                        Log.d(tag, "onReceivedError deprecated $failingUrl $errorCode $description")
+                        Log.e(tag, "onReceivedError deprecated $failingUrl $errorCode $description")
                         handleLoadingError(failingUrl)
                     }
 
                     @TargetApi(Build.VERSION_CODES.M)
                     override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                        Log.d(tag, "onReceivedError ${request.url} ${error.errorCode} ${error.description}")
+                        Log.e(tag, "onReceivedError ${request.url} ${error.errorCode} ${error.description}")
                         handleLoadingError(request.url.toString())
                     }
 
                     @TargetApi(Build.VERSION_CODES.M)
                     override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, errorResponse: WebResourceResponse) {
-                        Log.d(tag, "onReceivedHttpError ${request.url} ${errorResponse.statusCode} ${errorResponse.reasonPhrase}")
+                        Log.e(tag, "onReceivedHttpError ${request.url} ${errorResponse.statusCode} ${errorResponse.reasonPhrase}")
                         handleLoadingError(request.url.toString())
                     }
                 }
@@ -165,7 +168,6 @@ class BidaliSDK(private val context: Context) {
         this.setupHandlers(context, sdkOptions)
 
         val widgetUrl = urlForEnvironment(sdkOptions)
-        Log.d(tag, "loading $widgetUrl")
         webView.loadUrl(widgetUrl)
     }
 }
