@@ -1,6 +1,7 @@
 package com.example.demo
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.ActionBar
@@ -68,6 +69,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             bidaliSDK.show(this, options)
+        }
+
+        with_viewgroup.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
         }
     }
 }
