@@ -65,6 +65,10 @@ fun buildProps(context: Context, sdkOptions: BidaliSDKOptions): JSONObject {
         props["paymentCurrencies"] = sdkOptions.paymentCurrencies
     }
 
+    if (sdkOptions.defaultCountry != null) {
+        props["defaultCountry"] = sdkOptions.defaultCountry
+    }
+
     props["platform"] = getPlatform(context)
     return JSONObject(props)
 }

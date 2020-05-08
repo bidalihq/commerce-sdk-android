@@ -8,5 +8,6 @@ data class BidaliSDKOptions(val apiKey: String) {
     @JvmField var email: String? = null
     @JvmField var paymentType: PaymentType? = PaymentType.PREFILL
     @JvmField var paymentCurrencies: ArrayList<String>? = null
+    @JvmField var defaultCountry: String? = null
     @JvmField var listener: BidaliSDK.BidaliSDKListener? = null
 }
