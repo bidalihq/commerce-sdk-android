@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         with_bitcoin.setOnClickListener {
             val options = BidaliSDKOptions("YOUR API KEY")
+            options.defaultCountry = "CA"
             options.paymentCurrencies = object : ArrayList<String>() {
                 init {
                     add("BTC")
